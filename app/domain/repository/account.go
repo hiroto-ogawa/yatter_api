@@ -11,5 +11,5 @@ type Account interface {
 	FindByUsername(ctx context.Context, username string) (*object.Account, error)
 	// TODO: Add Other APIs
 	CreateAccount(account *object.Account) error
-	GetAccount(account *object.Account) (*object.Account, error)
+	GetAccount(username string) (*object.Account, error)
 }

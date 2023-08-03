@@ -62,9 +62,9 @@ func (r *account) CreateAccount(account *object.Account) error {
 	return nil
 }
 
-func (r *account) GetAccount(account *object.Account) (*object.Account, error) {
+func (r *account) GetAccount(username string) (*object.Account, error) {
 	entity := new(object.Account)
-	err := r.db.QueryRowx("SELECT * from account WHERE username = ?", &account.Username).StructScan(entity)
+	err := r.db.QueryRowx("SELECT * from account WHERE username = ?", username).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

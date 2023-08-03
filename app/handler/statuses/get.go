@@ -1,25 +1,30 @@
-package accounts
+package statuses
 
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
 
-// Handle request for `GET /v1/accounts/{username}`
 func (h *handler) Get(w http.ResponseWriter, r *http.Request) {
-	//ctx := r.Context()
-	username := chi.URLParam(r, "username")
 
-	account, err := h.ar.GetAccount(username)
+	statusIDStr := chi.URLParam(r, "id")
+	statusID, err := strconv.ParseInt(statusIDStr, 10, 64)
+
+	status, err := h.sr.GetStatus(statusID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(account); err != nil {
+	if status == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(status); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
