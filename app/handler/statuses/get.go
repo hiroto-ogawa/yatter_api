@@ -12,6 +12,10 @@ func (h *handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	statusIDStr := chi.URLParam(r, "id")
 	statusID, err := strconv.ParseInt(statusIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Malformed parameter id", http.StatusBadRequest)
+		return
+	}
 
 	status, err := h.sr.GetStatus(statusID)
 	if err != nil {
